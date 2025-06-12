@@ -60,4 +60,5 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile_market .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          
       
