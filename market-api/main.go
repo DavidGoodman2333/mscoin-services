@@ -1,8 +1,11 @@
 package main
 
+import "fmt"
+
 // var configFile = flag.String("f", "etc/conf.yaml", "the config file")
 
 func main() {
+	fmt.Printf("Starting server ...\n")
 	// flag.Parse()
 	// //日志的打印格式替换一下
 	// logx.MustSetup(logx.LogConf{Stat: false, Encoding: "plain"})
