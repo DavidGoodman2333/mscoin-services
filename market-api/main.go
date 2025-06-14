@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"market-api/internal/config"
-	"market-api/internal/ws"
 
 	"github.com/zeromicro/go-zero/core/logx"
 
@@ -18,7 +17,7 @@ func main() {
 	logx.MustSetup(logx.LogConf{Stat: false, Encoding: "plain"})
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-	wsServer := ws.NewWebsocketServer("/socket.io")
+	// wsServer := ws.NewWebsocketServer("/socket.io")
 	// server := rest.MustNewServer(
 	// 	c.RestConf,
 	// 	rest.WithChain(chain.New(wsServer.ServerHandler)),
