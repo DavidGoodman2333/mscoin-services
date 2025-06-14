@@ -1,0 +1,64 @@
+name: Market-API Service AWS ECR Image Build and Push
+on:
+  push:
+    paths:
+      - 'market-api/**'
+      - 'Dockerfile_market-api*'
+      - '.github/workflows/market-api-ci.yml'
+    branches:
+      - master
+      - "feature/*"
+      - "fix/*"
+      - "dev"
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  pull_request:
+    paths:
+      - 'market-api/**'
+      - 'Dockerfile_market-api*'
+      - '.github/workflows/market-api-ci.yml'
+    types:
+      - closed
+    branches:
+      - master
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  build-push-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::987595490691:role/github-oidc-role
+          aws-region: ap-east-1
+      - name: login
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      # 设置标签
+      - name: generate tag
+        id: set-tags
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION=${{ github.ref_name }}
+            echo "IMAGE_TAG=$VERSION" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "IMAGE_TAG=market_api_latest" >> $GITHUB_ENV
+          else
+            BRANCH_NAME=$(echo "${{ github.ref_name }}" | sed 's|/|_|g')
+            RUN_NUMBER=${{ github.run_number }}
+            echo "IMAGE_TAG=market_api_$BRANCH_NAME_$RUN_NUMBER" >> $GITHUB_ENV
+          fi
+      - name: build
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: mscoin_services
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile_market_api .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          
+      
