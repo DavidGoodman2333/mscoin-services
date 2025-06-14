@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"market-api/internal/logic"
 	"market-api/internal/svc"
 	"market-api/internal/types"
 	common "mscoin-common"
 	"mscoin-common/tools"
 	"net/http"
+
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 type MarketHandler struct {
