@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"github.com/zeromicro/go-zero/rest"
 	"net/http"
+
+	"github.com/zeromicro/go-zero/rest"
 )
 
 type Routers struct {
@@ -71,6 +72,7 @@ func (r *Routers) PostNoPrefix(path string, handlerFunc http.HandlerFunc) {
 		),
 	)
 }
+
 func (r *Routers) Group() *Routers {
 	return &Routers{
 		server: r.server,
