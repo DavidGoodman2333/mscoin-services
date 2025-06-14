@@ -1,11 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"log"
+	"market-api/internal/config"
+	"net/http"
 
-// var configFile = flag.String("f", "etc/conf.yaml", "the config file")
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
+)
+
+var configFile = flag.String("f", "etc/conf.yaml", "the config file")
 
 func main() {
-	fmt.Printf("Starting server ...\n")
 	// flag.Parse()
 	// //日志的打印格式替换一下
 	// logx.MustSetup(logx.LogConf{Stat: false, Encoding: "plain"})
@@ -25,9 +34,24 @@ func main() {
 	// router := handler.NewRouters(server, c.Prefix)
 	// handler.RegisterHandlers(router, ctx)
 
-	// group := service.NewServiceGroup()
-	// group.Add(server)
-	// group.Add(wsServer)
-	// fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
-	// group.Start()
+	var restConf rest.RestConf
+	var c config.Config
+	conf.MustLoad(*configFile, &c)
+    s, err := rest.NewServer(restConf)
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
+
+    s.AddRoute(rest.Route{ // 添加路由
+        Method: http.MethodGet,
+        Path:   "/hello/world",
+        Handler: func(writer http.ResponseWriter, request *http.Request) { // 处理函数
+            httpx.OkJson(writer, "Hello World!")
+        },
+    })
+    defer s.Stop()
+	
+	fmt.Printf("Starting server ...\n")
+    s.Start() // 启动服务
 }
