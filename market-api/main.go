@@ -1,22 +1,13 @@
 package main
 
-import (
-	"flag"
-	"market-api/internal/config"
-
-	"github.com/zeromicro/go-zero/core/logx"
-
-	"github.com/zeromicro/go-zero/core/conf"
-)
-
-var configFile = flag.String("f", "etc/conf.yaml", "the config file")
+// var configFile = flag.String("f", "etc/conf.yaml", "the config file")
 
 func main() {
-	flag.Parse()
-	//日志的打印格式替换一下
-	logx.MustSetup(logx.LogConf{Stat: false, Encoding: "plain"})
-	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	// flag.Parse()
+	// //日志的打印格式替换一下
+	// logx.MustSetup(logx.LogConf{Stat: false, Encoding: "plain"})
+	// var c config.Config
+	// conf.MustLoad(*configFile, &c)
 	// wsServer := ws.NewWebsocketServer("/socket.io")
 	// server := rest.MustNewServer(
 	// 	c.RestConf,
