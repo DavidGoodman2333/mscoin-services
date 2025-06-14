@@ -58,7 +58,7 @@ jobs:
           REPOSITORY: mscoin_services
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile_market_api .
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile_market-api .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           
       
