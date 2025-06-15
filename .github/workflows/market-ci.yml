@@ -38,6 +38,21 @@ jobs:
       - name: login
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+      - name: Run Unit Tests 
+        working-directory: ./market
+        run: go test ./... -v
+
       # 设置标签
       - name: generate tag
         id: set-tags
@@ -52,6 +67,10 @@ jobs:
             RUN_NUMBER=${{ github.run_number }}
             echo "IMAGE_TAG=market_$BRANCH_NAME_$RUN_NUMBER" >> $GITHUB_ENV
           fi
+      - name: test
+        run: |
+          go test -v -coverprofile=coverage.out ./...
+            
       - name: build
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
